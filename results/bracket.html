@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Cuadro de eliminatoria — Mundial 2026</title>
+<style>
+  :root {
+    --surface-1: #fcfcfb; --page: #f9f9f7; --ink-1: #0b0b0b; --ink-2: #52514e;
+    --ink-muted: #898781; --line: #e1e0d9; --good: #0ca30c; --previsto: #2a78d6;
+    --winner-bg: #eef6ee;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --surface-1: #1a1a19; --page: #0d0d0d; --ink-1: #ffffff; --ink-2: #c3c2b7;
+      --ink-muted: #898781; --line: #2c2c2a; --good: #0ca30c; --previsto: #3987e5;
+      --winner-bg: #14231a;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 24px; background: var(--page); color: var(--ink-1);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  h1 { font-size: 1.4rem; margin: 0 0 4px; }
+  .subtitulo { color: var(--ink-2); margin: 0 0 24px; font-size: 0.9rem; }
+  .campeon { font-size: 1.1rem; margin: 0 0 24px; padding: 12px 16px; border-radius: 10px;
+    background: var(--winner-bg); border: 1px solid var(--line); display: inline-block; }
+  .cuadro { display: flex; gap: 16px; overflow-x: auto; padding-bottom: 12px; }
+  .ronda { min-width: 240px; flex: 0 0 auto; }
+  .ronda h2 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.04em;
+    color: var(--ink-muted); border-bottom: 1px solid var(--line); padding-bottom: 6px; }
+  .partido { background: var(--surface-1); border: 1px solid var(--line); border-radius: 10px;
+    padding: 10px 12px; margin-bottom: 14px; }
+  .cabecera { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .fecha { font-size: 0.72rem; color: var(--ink-muted); }
+  .badge { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.03em; padding: 2px 6px; border-radius: 4px; }
+  .badge-real { color: var(--good); border: 1px solid var(--good); }
+  .badge-previsto { color: var(--previsto); border: 1px solid var(--previsto); }
+  .equipo { display: flex; align-items: center; gap: 8px; padding: 3px 0; font-size: 0.88rem; }
+  .equipo .flag { font-size: 1.1rem; }
+  .equipo .nombre { flex: 1; }
+  .equipo .goles { font-variant-numeric: tabular-nums; font-weight: 600; }
+  .equipo.ganador { font-weight: 700; }
+  .equipo.perdedor { color: var(--ink-2); opacity: 0.7; }
+  .prob { font-size: 0.68rem; color: var(--ink-muted); margin-top: 4px; }
+</style>
+</head>
+<body>
+  <h1>Cuadro de eliminatoria — Mundial 2026</h1>
+  <p class="subtitulo">Modelo: XGBOOST + Dixon-Coles (checkpoint 'post_dieciseisavos') ·
+    verde = ya jugado, azul = previsto por el modelo</p>
+  <div class="campeon">🏆 Campeón previsto: <strong>🇪🇸 Spain</strong></div>
+  <div class="cuadro">
+    <section class="ronda ronda-Dieciseisavosdefinal"><h2>Dieciseisavos de final</h2>
+    <div class="partido">
+      <div class="cabecera"><span class="badge badge-real">JUGADO</span><span class="fecha">28 Jun</span></div>
+      <div class="equipo perdedor"><span class="flag">🇿🇦</span>
+        <span class="nombre">South Africa</span><span class="goles">0</span></div>
+      <div class="equipo ganador"><span class="flag">🇨🇦</span>
+        <span class="nombre">Canada</span><span class="goles">1</span></div>
+      
+    </div>
+
+    <div class="partido">
+      <div class="cabecera"><span class="badge badge-real">JUGADO</span><span class="fecha">29 Jun</span></div>
+      <div class="equipo perdedor"><span class="flag">🇩🇪</span>
+        <span class="nombre">Germany</span><span class="goles">1</span></div>
+      <div class="equipo ganador"><span class="flag">🇵🇾</span>
+        <span class="nombre">Paraguay</span><span class="goles">1</span></div>
+      
+    </div>
+
+    <div class="partido">
+      <div class="cabecera"><span class="badge badge-real">JUGADO</span><span class="fecha">29 Jun</span></div>
+      <div class="equipo perdedor"><span class="flag">🇳🇱</span>
+        <span class="nombre">Netherlands</span><span class="goles">1</span></div>
+      <div class="equipo ganador"><span class="flag">🇲🇦</span>
+        <span class="nombre">Morocco</span><span class="goles">1</span></div>
+      
+    </div>
+
+    <div class="partido">
+      <div class="cabecera"><span class="badge badge-real">JUGADO</span><span class="fecha">29 Jun</span></div>
+      <div class="equipo ganador"><span class="flag">🇧🇷</span>
+        <span class="nombre">Brazil</span><span class="goles">2</span></div>
+      <div class="equipo perdedor"><span class="flag">🇯🇵</span>
+        <span class="nombre">Japan</span><span class="goles">1</span></div>
+      
+    </div>
+
+    <div class="partido">
+      <div class="cabecera"><span class="badge badge-real">JUGADO</span><span class="fecha">30 Jun</span></div>
+      <div class="equipo ganador"><span class="flag">🇫🇷</span>
+        <span class="nombre">France</span><span class="goles">3</span></div>
+      <div class="equipo perdedor"><span class="flag">🇸🇪</span>
+        <span class="nombre">Sweden</span><span class="goles">0</span></div>
+      
+    </div>
+
+    <div class="partido">
+      <div class="cabecera"><span class="badge badge-real">JUGADO</span><span class="fecha">30 Jun</span></div>
+      <div class="equipo perdedor"><span class="flag">🇨🇮</span>
+        <span class="nombre">Ivory Coast</span><span class="goles">1</span></div>
+      <div class="equipo ganador"><span class="flag">🇳🇴</span>
+        <span class="nombre">Norway</span><span class="goles">2</span></div>
+      
+    </div>
+
+    <div class="partido">
+      <div class="cabecera"><span class="badge badge-real">JUGADO</span><span class="fecha">30 Jun</span></div>
+      <div class="equipo ganador"><span class="flag">🇲🇽</span>
+        <span class="nombre">Mexico</span><span class="goles">2</span></div>
+      <div class="equipo perdedor"><span class="flag">🇪🇨</span>
+        <span class="nombre">Ecuador</span><span class="goles">0</span></div>
+      
+    </div>
+
+    <div class="partido">
+      <div class="cabecera"><span class="badge badge-real">JUGADO</span><span class="fecha">01 Jul</span></div>
+      <div class="equipo ganador"><span class="flag">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span>
+        <span class="nombre">England</span><span class="goles">2</span></div>
+      <div class="equipo perdedor"><span class="flag">🇨🇩</span>
+        <span class="nombre">DR Congo</span><span class="goles">1</span></div>
+      
+    </div>
+
+    <div class="partido">
+      <div class="cabecera"><span class="badge badge-real">JUGADO</span><span class="fecha">01 Jul</span></div>
+      <div class="equipo ganador"><span class="flag">🇺🇸</span>
+        <span class="nombre">United States</span><span class="goles">2</span></div>
+      <div class="equipo perdedor"><span class="flag">🇧🇦</span>
+        <span class="nombre">Bosnia and Herzegovina</span><span class="goles">0</span></div>
+      
+    </div>
+
+    <div class="partido">
+      <div class="cabecera"><span class="badge badge-real">JUGADO</span><span class="fecha">01 Jul</span></div>
+      <div class="equipo ganador"><span class="flag">🇧🇪</span>
+        <span class="nombre">Belgium</span><span class="goles">2</span></div>
+      <div class="equipo perdedor"><span class="flag">🇸🇳</span>
+        <span class="nombre">Senegal</span><span class="goles">2</span></div>
+      
+    </div>
+
+    <div class="partido">
+      <div class="cabecera"><span class="badge badge-real">JUGADO</span><span class="fecha">02 Jul</span></div>
+      <div class="equipo ganador"><span class="flag">🇵🇹</span>
+        <span class="nombre">Portugal</span><span class="goles">2</span></div>
+      <div class="equipo perdedor"><span class="flag">🇭🇷</span>
+        <span class="nombre">Croatia</span><span class="goles">1</span></div>
+      
+    </div>
+
+    <div class="partido">
+      <div class="cabecera"><span class="badge badge-real">JUGADO</span><span class="fecha">02 Jul</span></div>
+      <div class="equipo ganador"><span class="flag">🇪🇸</span>
+        <span class="nombre">Spain</span><span class="goles">3</span></div>
+      <div class="equipo perdedor"><span class="flag">🇦🇹</span>
+        <span class="nombre">Austria</span><span class="goles">0</span></div>
+      
+    </div>
+
+    <div class="partido">
+      <div class="cabecera"><span class="badge badge-real">JUGADO</span><span class="fecha">02 Jul</span></div>
+      <div class="equipo ganador"><span class="flag">🇨🇭</span>
+        <span class="nombre">Switzerland</span><span class="goles">2</span></div>
+      <div class="equipo perdedor"><span class="flag">🇩🇿</span>
+        <span class="nombre">Algeria</span><span class="goles">0</span></div>
+      
+    </div>
+
+    <div class="partido">
+      <div class="cabecera"><span class="badge badge-previsto">PREVISTO</span><span class="fecha">03 Jul</span></div>
+      <div class="equipo ganador"><span class="flag">🇦🇷</span>
+        <span class="nombre">Argentina</span><span class="goles">2</span></div>
+      <div class="equipo perdedor"><span class="flag">🇨🇻</span>
+        <span class="nombre">Cape Verde</span><span class="goles">0</span></div>
+      <div class="prob">P(Argentina)=84% · P(Cape Verde)=5%</div>
+    </div>
+
+    <div class="partido">
+      <div class="cabecera"><span class="badge badge-previsto">PREVISTO</span><span class="fecha">03 Jul</span></div>
+      <div class="equipo ganador"><span class="flag">🇨🇴</span>
+        <span class="nombre">Colombia</span><span class="goles">2</span></div>
+      <div class="equipo perdedor"><span class="flag">🇬🇭</span>
+        <span class="nombre">Ghana</span><span class="goles">0</span></div>
+      <div class="prob">P(Colombia)=78% · P(Ghana)=7%</div>
+    </div>
+
+    <div class="partido">
+      <div class="cabecera"><span class="badge badge-previsto">PREVISTO</span><span class="fecha">03 Jul</span></div>
+      <div class="equipo perdedor"><span class="flag">🇦🇺</span>
+        <span class="nombre">Australia</span><span class="goles">1</span></div>
+      <div class="equipo ganador"><span class="flag">🇪🇬</span>
+        <span class="nombre">Egypt</span><span class="goles">1</span></div>
+      <div class="prob">P(Australia)=24% · P(Egypt)=51%</div>
+    </div></section><section class="ronda ronda-Octavosdefinal"><h2>Octavos de final</h2>
+    <div class="partido">
+      <div class="cabecera"><span class="badge badge-previsto">PREVISTO</span><span class="fecha">04 Jul</span></div>
+      <div class="equipo perdedor"><span class="flag">🇵🇾</span>
+        <span class="nombre">Paraguay</span><span class="goles">0</span></div>
+      <div class="equipo ganador"><span class="flag">🇫🇷</span>
+        <span class="nombre">France</span><span class="goles">2</span></div>
+      <div class="prob">P(Paraguay)=11% · P(France)=71%</div>
+    </div>
+
+    <div class="partido">
+      <div class="cabecera"><span class="badge badge-previsto">PREVISTO</span><span class="fecha">04 Jul</span></div>
+      <div class="equipo perdedor"><span class="flag">🇨🇦</span>
+        <span class="nombre">Canada</span><span class="goles">1</span></div>
+      <div class="equipo ganador"><span class="flag">🇲🇦</span>
+        <span class="nombre">Morocco</span><span class="goles">1</span></div>
+      <div class="prob">P(Canada)=19% · P(Morocco)=57%</div>
+    </div>
+
+    <div class="partido">
+      <div class="cabecera"><span class="badge badge-previsto">PREVISTO</span><span class="fecha">05 Jul</span></div>
+      <div class="equipo ganador"><span class="flag">🇧🇷</span>
+        <span class="nombre">Brazil</span><span class="goles">1</span></div>
+      <div class="equipo perdedor"><span class="flag">🇳🇴</span>
+        <span class="nombre">Norway</span><span class="goles">1</span></div>
+      <div class="prob">P(Brazil)=43% · P(Norway)=28%</div>
+    </div>
+
+    <div class="partido">
+      <div class="cabecera"><span class="badge badge-previsto">PREVISTO</span><span class="fecha">05 Jul</span></div>
+      <div class="equipo perdedor"><span class="flag">🇲🇽</span>
+        <span class="nombre">Mexico</span><span class="goles">1</span></div>
+      <div class="equipo ganador"><span class="flag">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span>
+        <span class="nombre">England</span><span class="goles">1</span></div>
+      <div class="prob">P(Mexico)=27% · P(England)=44%</div>
+    </div>
+
+    <div class="partido">
+      <div class="cabecera"><span class="badge badge-previsto">PREVISTO</span><span class="fecha">06 Jul</span></div>
+      <div class="equipo perdedor"><span class="flag">🇵🇹</span>
+        <span class="nombre">Portugal</span><span class="goles">1</span></div>
+      <div class="equipo ganador"><span class="flag">🇪🇸</span>
+        <span class="nombre">Spain</span><span class="goles">1</span></div>
+      <div class="prob">P(Portugal)=23% · P(Spain)=50%</div>
+    </div>
+
+    <div class="partido">
+      <div class="cabecera"><span class="badge badge-previsto">PREVISTO</span><span class="fecha">06 Jul</span></div>
+      <div class="equipo perdedor"><span class="flag">🇺🇸</span>
+        <span class="nombre">United States</span><span class="goles">1</span></div>
+      <div class="equipo ganador"><span class="flag">🇧🇪</span>
+        <span class="nombre">Belgium</span><span class="goles">1</span></div>
+      <div class="prob">P(United States)=25% · P(Belgium)=47%</div>
+    </div>
+
+    <div class="partido">
+      <div class="cabecera"><span class="badge badge-previsto">PREVISTO</span><span class="fecha">07 Jul</span></div>
+      <div class="equipo ganador"><span class="flag">🇦🇷</span>
+        <span class="nombre">Argentina</span><span class="goles">2</span></div>
+      <div class="equipo perdedor"><span class="flag">🇪🇬</span>
+        <span class="nombre">Egypt</span><span class="goles">0</span></div>
+      <div class="prob">P(Argentina)=78% · P(Egypt)=6%</div>
+    </div>
+
+    <div class="partido">
+      <div class="cabecera"><span class="badge badge-previsto">PREVISTO</span><span class="fecha">07 Jul</span></div>
+      <div class="equipo perdedor"><span class="flag">🇨🇭</span>
+        <span class="nombre">Switzerland</span><span class="goles">1</span></div>
+      <div class="equipo ganador"><span class="flag">🇨🇴</span>
+        <span class="nombre">Colombia</span><span class="goles">1</span></div>
+      <div class="prob">P(Switzerland)=27% · P(Colombia)=46%</div>
+    </div></section><section class="ronda ronda-Cuartosdefinal"><h2>Cuartos de final</h2>
+    <div class="partido">
+      <div class="cabecera"><span class="badge badge-previsto">PREVISTO</span><span class="fecha">09 Jul</span></div>
+      <div class="equipo ganador"><span class="flag">🇫🇷</span>
+        <span class="nombre">France</span><span class="goles">1</span></div>
+      <div class="equipo perdedor"><span class="flag">🇲🇦</span>
+        <span class="nombre">Morocco</span><span class="goles">0</span></div>
+      <div class="prob">P(France)=60% · P(Morocco)=16%</div>
+    </div>
+
+    <div class="partido">
+      <div class="cabecera"><span class="badge badge-previsto">PREVISTO</span><span class="fecha">10 Jul</span></div>
+      <div class="equipo ganador"><span class="flag">🇪🇸</span>
+        <span class="nombre">Spain</span><span class="goles">2</span></div>
+      <div class="equipo perdedor"><span class="flag">🇧🇪</span>
+        <span class="nombre">Belgium</span><span class="goles">0</span></div>
+      <div class="prob">P(Spain)=64% · P(Belgium)=14%</div>
+    </div>
+
+    <div class="partido">
+      <div class="cabecera"><span class="badge badge-previsto">PREVISTO</span><span class="fecha">11 Jul</span></div>
+      <div class="equipo ganador"><span class="flag">🇧🇷</span>
+        <span class="nombre">Brazil</span><span class="goles">1</span></div>
+      <div class="equipo perdedor"><span class="flag">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span>
+        <span class="nombre">England</span><span class="goles">1</span></div>
+      <div class="prob">P(Brazil)=40% · P(England)=32%</div>
+    </div>
+
+    <div class="partido">
+      <div class="cabecera"><span class="badge badge-previsto">PREVISTO</span><span class="fecha">11 Jul</span></div>
+      <div class="equipo ganador"><span class="flag">🇦🇷</span>
+        <span class="nombre">Argentina</span><span class="goles">1</span></div>
+      <div class="equipo perdedor"><span class="flag">🇨🇴</span>
+        <span class="nombre">Colombia</span><span class="goles">0</span></div>
+      <div class="prob">P(Argentina)=58% · P(Colombia)=17%</div>
+    </div></section><section class="ronda ronda-Semifinales"><h2>Semifinales</h2>
+    <div class="partido">
+      <div class="cabecera"><span class="badge badge-previsto">PREVISTO</span><span class="fecha">14 Jul</span></div>
+      <div class="equipo perdedor"><span class="flag">🇫🇷</span>
+        <span class="nombre">France</span><span class="goles">1</span></div>
+      <div class="equipo ganador"><span class="flag">🇪🇸</span>
+        <span class="nombre">Spain</span><span class="goles">1</span></div>
+      <div class="prob">P(France)=31% · P(Spain)=39%</div>
+    </div>
+
+    <div class="partido">
+      <div class="cabecera"><span class="badge badge-previsto">PREVISTO</span><span class="fecha">15 Jul</span></div>
+      <div class="equipo perdedor"><span class="flag">🇧🇷</span>
+        <span class="nombre">Brazil</span><span class="goles">1</span></div>
+      <div class="equipo ganador"><span class="flag">🇦🇷</span>
+        <span class="nombre">Argentina</span><span class="goles">1</span></div>
+      <div class="prob">P(Brazil)=28% · P(Argentina)=44%</div>
+    </div></section><section class="ronda ronda-Tercerpuesto"><h2>Tercer puesto</h2>
+    <div class="partido">
+      <div class="cabecera"><span class="badge badge-previsto">PREVISTO</span><span class="fecha">18 Jul</span></div>
+      <div class="equipo ganador"><span class="flag">🇫🇷</span>
+        <span class="nombre">France</span><span class="goles">1</span></div>
+      <div class="equipo perdedor"><span class="flag">🇧🇷</span>
+        <span class="nombre">Brazil</span><span class="goles">1</span></div>
+      <div class="prob">P(France)=47% · P(Brazil)=25%</div>
+    </div></section><section class="ronda ronda-Final"><h2>Final</h2>
+    <div class="partido">
+      <div class="cabecera"><span class="badge badge-previsto">PREVISTO</span><span class="fecha">19 Jul</span></div>
+      <div class="equipo ganador"><span class="flag">🇪🇸</span>
+        <span class="nombre">Spain</span><span class="goles">1</span></div>
+      <div class="equipo perdedor"><span class="flag">🇦🇷</span>
+        <span class="nombre">Argentina</span><span class="goles">1</span></div>
+      <div class="prob">P(Spain)=41% · P(Argentina)=31%</div>
+    </div></section>
+  </div>
+</body>
+</html>

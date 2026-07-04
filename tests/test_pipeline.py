@@ -15,7 +15,7 @@ from scipy.stats import poisson
 
 RAIZ = Path(__file__).parent.parent
 NOTEBOOK_01 = RAIZ / "notebooks" / "01_adquisicion_datos.ipynb"
-NOTEBOOK_04 = RAIZ / "notebooks" / "04_modelado_optuna_walkforward.ipynb"
+NOTEBOOK_04 = RAIZ / "notebooks" / "04_prediccion.ipynb"
 
 
 def _extraer_funciones_de_celda(ruta_notebook: Path, contiene: str) -> str:
@@ -57,13 +57,56 @@ class TestModaPoisson:
 
     def test_lambda_entre_0_5_y_1_predice_cero_no_uno(self, espacio_matriz_y_resolver):
         ns = espacio_matriz_y_resolver(rho=0.0)
-        resultado = ns["resolver_eliminatoria"]("A", "B", lam_a=2.0, lam_b=0.81)
+        # lam_a=2.2, no 2.0: en lam=2.0 exacto Poisson empata P(1)==P(2) y
+        # deja de ser un buen ejemplo de "una sola moda clara" (ver
+        # TestModaConjuntaConDixonColes.test_un_lambda_entero_empata_dos_modas).
+        resultado = ns["resolver_eliminatoria"]("A", "B", lam_a=2.2, lam_b=0.81)
         assert resultado["marcador_previsto"] == "2-0"  # round(0.81) daría "2-1"
 
     def test_lambda_justo_por_encima_de_un_entero_no_redondea_hacia_arriba(self, espacio_matriz_y_resolver):
         ns = espacio_matriz_y_resolver(rho=0.0)
         resultado = ns["resolver_eliminatoria"]("A", "B", lam_a=1.63, lam_b=1.01)
         assert resultado["marcador_previsto"] == "1-1"  # round(1.63) daría "2-1"
+
+
+class TestModaConjuntaConDixonColes:
+    """El bug real (segunda vuelta): floor(lambda) de cada lado por separado
+    SOLO coincide con la moda del marcador conjunto cuando los dos lados son
+    independientes (rho=0) -- ver `TestModaPoisson`, que por eso no lo pilló,
+    los dos tests de esa clase usan rho=0.0. En cuanto Dixon-Coles introduce
+    correlación negativa leve (rho != 0) en los marcadores bajos, la moda
+    conjunta puede diferir de floor(lambda_a)-floor(lambda_b). Se descubrió
+    con el mismo método que el bug original: el usuario notó demasiados 1-1
+    en el cuadro de eliminatoria previsto (10 de 19 partidos previstos)."""
+
+    def test_floor_independiente_y_moda_conjunta_difieren_con_rho_no_nulo(self, espacio_matriz_y_resolver):
+        # Caso real (Australia vs Egipto, checkpoint post_ronda_1): floor da
+        # 0-1, pero con rho=-0.045 la moda conjunta de verdad es 1-1.
+        ns = espacio_matriz_y_resolver(rho=-0.045)
+        resultado = ns["resolver_eliminatoria"]("A", "B", lam_a=0.99, lam_b=1.78)
+        assert (int(np.floor(0.99)), int(np.floor(1.78))) == (0, 1)  # lo que daría floor/floor
+        assert resultado["marcador_previsto"] == "1-1"  # lo que de verdad da la matriz conjunta
+
+    def test_con_rho_cero_moda_conjunta_coincide_con_floor_independiente(self, espacio_matriz_y_resolver):
+        # Sin correlación, el argmax de un producto de dos Poisson SÍ es el
+        # producto de los dos argmax marginales -- floor/floor era, en este
+        # caso particular, casualmente correcto.
+        ns = espacio_matriz_y_resolver(rho=0.0)
+        resultado = ns["resolver_eliminatoria"]("A", "B", lam_a=0.99, lam_b=1.78)
+        assert resultado["marcador_previsto"] == "0-1"
+
+    def test_un_lambda_entero_empata_dos_modas(self, espacio_matriz_y_resolver):
+        # Con lambda EXACTAMENTE entero, Poisson(lambda) no tiene una moda
+        # única: P(lambda-1) == P(lambda) siempre. floor(lambda) elige el de
+        # arriba (2 para lam_a=2.0, 1 para lam_b=1.0) por convención;
+        # np.argmax sobre la rejilla elige el índice más bajo en cada empate
+        # (1 y 0 respectivamente). Ninguna de las dos está "mal" -- es un
+        # empate real, no un bug -- pero conviene dejarlo documentado para no
+        # confundirlo con el caso de `TestModaPoisson` (que usa 2.2, no 2.0,
+        # precisamente para evitar este empate).
+        ns = espacio_matriz_y_resolver(rho=0.0)
+        resultado = ns["resolver_eliminatoria"]("A", "B", lam_a=2.0, lam_b=1.0)
+        assert resultado["marcador_previsto"] == "1-0"  # ambas lambdas empatan su moda; argmax elige el índice más bajo de cada una
 
 
 class TestResolverSiemprePorProbabilidad:
