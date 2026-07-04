@@ -22,6 +22,13 @@ walk-forward), guardando un snapshot (`models/checkpoints/`) en cada etapa del t
 | 4 | [`04_prediccion.ipynb`](notebooks/04_prediccion.ipynb) | Entrena, predice partido a partido con reentrenamiento walk-forward, y simula el cuadro completo por Montecarlo (día 0 o con lo jugado hasta hoy) | Cada vez que hay resultados nuevos |
 | 5 | [`05_cuadro_final.ipynb`](notebooks/05_cuadro_final.ipynb) | Cuadro visual (bracket) con banderas, real donde ya se jugó y predicho en cascada el resto | Después del 4 |
 
+Aparte del pipeline (1-5), [`06_resumen_visual_portfolio.ipynb`](notebooks/06_resumen_visual_portfolio.ipynb)
+es un recorrido visual completo del proyecto — datos, limpieza, features, estandarización,
+EDA, comparación de modelos, calibración, precisión real y probabilidades — pensado para
+mostrar el proyecto de principio a fin (portfolio / Kaggle). Autocontenido: solo lee de
+`data/` y `results/`, no depende de que se acabe de ejecutar nada; para subirlo a Kaggle basta
+con adjuntar esas carpetas como dataset y ajustar `DIR_DATOS` en la primera celda.
+
 ## La receta: qué ejecutar para cada cosa
 
 **Actualizar la base de datos** (traer resultados nuevos):
