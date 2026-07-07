@@ -1,0 +1,9 @@
+{
+  "p_prorroga_dado_empate90": 0.3345,
+  "p_penaltis_dado_empate90": 0.6655,
+  "beta_elo_prorroga": 0.0018581435136440358,
+  "p_penaltis_favorito": 0.5,
+  "n_prorrogas_ajuste": 72,
+  "n_total_mas90": 296,
+  "nota": "penaltis 50/50: favorito 45.9% (n=146) y primer tirador 52.5% (n=259) no significativos"
+}
