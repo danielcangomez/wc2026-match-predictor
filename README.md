@@ -124,6 +124,25 @@ de todas las features probadas). Descartadas con evidencia: features de SofaScor
 exponencial de forma, recalibración de marcadores frecuentes, y la regla de umbral para
 predecir empates.
 
+## Dashboard interactivo (`app.py`)
+
+Un dashboard de Streamlit que lee de `results/` y **recalcula las métricas en vivo**, así que
+se actualiza solo cuando llegan resultados nuevos. Tres vistas: predicciones de 2026 (previsto
+vs. real), probabilidad de campeón por selección (Montecarlo), y la sección de rigor
+(validación amplia + benchmark contra el mercado).
+
+```
+streamlit run app.py
+```
+
+Para desplegarlo gratis con enlace público: sube el repo a GitHub y conéctalo en
+[share.streamlit.io](https://share.streamlit.io) apuntando a `app.py` (solo necesita `results/`,
+no el modelo ni los datos crudos).
+
+**Refresco diario**: `scripts/actualizar_diario.sh` reejecuta el pipeline (descarga resultados
+nuevos → reconstruye features → re-predice y reentrena → regenera el cuadro). Programable con
+`cron` una vez al día; en cuanto termina, el dashboard refleja lo nuevo sin tocar código.
+
 ## Módulo de apuestas (`scripts/simulador_kelly.py`)
 
 Compara las probabilidades del modelo con cuotas reales de mercado (football-data.co.uk,
