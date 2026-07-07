@@ -10,9 +10,9 @@ re-evaluarla.
 
 | Test | Resultado | Archivo |
 |---|---|---|
-| LogLoss modelo vs mercado, 4 Mundiales (266 partidos, cuotas medias de cierre) | El mercado gana **4 de 4** (0.926 vs 0.999 agregado) | `apuestas_benchmark_mercado.csv` |
-| Kelly fraccionado (25%) sobre el edge aparente, banca 100 | **ROI −80.6%**, drawdown 82% | `apuestas_historial_kelly.csv` |
-| Apuesta de valor en empates (umbral P(X)≥0.29 pre-registrado, stake plano) | **ROI −36.8%** (65 apuestas), negativo en todo el barrido de umbrales | sección 16b del notebook 06 |
+| LogLoss modelo vs mercado, 4 Mundiales (266 partidos, cuotas medias de cierre) | El mercado gana **4 de 4** (0.926 vs 0.990 agregado) | `apuestas_benchmark_mercado.csv` |
+| Kelly fraccionado (25%) sobre el edge aparente, banca 100 | **ROI −80.1%**, drawdown 81% | `apuestas_historial_kelly.csv` |
+| Apuesta de valor en empates (umbral P(X)≥0.29 pre-registrado, stake plano) | **ROI −20.2%** (20 apuestas), sigue negativo | sección 16b del notebook 06 |
 
 Lectura: el "edge" que el modelo cree ver (edge medio 0.42 en las apuestas tomadas) es un
 artefacto de calibración — el modelo está *más equivocado* que la cuota justo cuando más

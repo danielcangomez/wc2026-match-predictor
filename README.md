@@ -158,9 +158,11 @@ notebooks/
   06_resumen_visual_portfolio.ipynb                       # el recorrido visual (Kaggle)
 scripts/
   simulador_kelly.py        # módulo de apuestas: edge + Kelly + simulación de banca
+  derivar_desenlaces_eliminatorias.py  # parámetros del módulo prórroga/penaltis
   scrape_sofascore*.py      # scrapers de estadísticas avanzadas (feature descartada, se
                              # conservan como documentación del experimento)
-  scrape_transfermarkt_valor.py  # valor de mercado actual (evidencia insuficiente, ídem)
+  scrape_transfermarkt_valor.py  # valor de mercado ACTUAL (no backtesteable); el valor
+                             # HISTÓRICO sí se adoptó, vía el dataset de Kaggle player-scores
 logs/                       # logs de scraping (no van en git)
 tests/
   test_pipeline.py          # funciones puras extraídas de los notebooks (sin reimplementar)
