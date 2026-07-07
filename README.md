@@ -18,11 +18,11 @@ fútbol internacional.
 
 | Métrica (evaluación a ciegas, sin fuga temporal) | Resultado |
 |---|---|
-| Acierto 1X2 en la fase de grupos 2026 (72 partidos) | **61%** (azar: 33%, casas de apuestas: ~55-58%) |
-| Acierto de quién avanza, dieciseisavos 2026 | **11/12** de los cruces decididos en 90' |
+| Acierto 1X2 en la fase de grupos 2026 (72 partidos) | **60%** (azar: 33%, casas de apuestas: ~55-58%) |
+| Acierto de quién avanza, dieciseisavos 2026 | **12/12** de los cruces decididos en 90' |
 | Marcador exacto (5 Mundiales, tras el ajuste de contexto) | **12.1%** (top-3: 36%) |
 | Accuracy 1X2 sobre 82 ediciones de torneos mayores | **54.3%** |
-| Puntos exactos de grupo clavados por selección (2026) | 13/48, error medio 1.6 pts |
+| Puntos exactos de grupo clavados por selección (2026) | 15/48, error medio 1.5 pts |
 
 ![Puntos previstos vs reales por grupo](docs/img/grupos_previsto_vs_real.png)
 
