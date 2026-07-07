@@ -15,19 +15,19 @@ num_partido,ronda,fecha,equipo_a,equipo_b,es_neutral,marcador,ganador,jugado,pro
 86,Dieciseisavos de final,2026-07-03,Argentina,Cape Verde,True,1-1,Argentina,True,,
 87,Dieciseisavos de final,2026-07-03,Colombia,Ghana,True,1-0,Colombia,True,,
 88,Dieciseisavos de final,2026-07-03,Australia,Egypt,True,1-1,Egypt,True,,
-89,Octavos de final,2026-07-04,Paraguay,France,True,0-2,France,False,0.11084257973620026,0.7037446548407551
+89,Octavos de final,2026-07-04,Paraguay,France,True,0-2,France,False,0.1268456604050356,0.6638364551333011
 90,Octavos de final,2026-07-04,Canada,Morocco,True,0-3,Morocco,True,,
-91,Octavos de final,2026-07-05,Brazil,Norway,True,1-1,Brazil,False,0.42729020190500816,0.27989423684811304
-92,Octavos de final,2026-07-05,Mexico,England,False,1-1,England,False,0.2709158166800434,0.44435153417178247
-93,Octavos de final,2026-07-06,Portugal,Spain,True,1-1,Spain,False,0.2309697384254345,0.4962664969108348
-94,Octavos de final,2026-07-06,United States,Belgium,False,1-1,Belgium,False,0.2607996010043923,0.45800512987809405
-95,Octavos de final,2026-07-07,Argentina,Egypt,True,2-0,Argentina,False,0.7771790140057495,0.0640806071161394
-96,Octavos de final,2026-07-07,Switzerland,Colombia,True,1-1,Colombia,False,0.2663161832563845,0.4602013488405837
-97,Cuartos de final,2026-07-09,France,Morocco,True,1-0,France,False,0.627451377790494,0.14250713620283836
-98,Cuartos de final,2026-07-10,Spain,Belgium,True,1-0,Spain,False,0.6428538959491895,0.13546335133954066
-99,Cuartos de final,2026-07-11,Brazil,England,True,1-1,Brazil,False,0.39511853814312337,0.3163750555159792
-100,Cuartos de final,2026-07-11,Argentina,Colombia,True,1-0,Argentina,False,0.5759587237949769,0.17046645653583742
-101,Semifinales,2026-07-14,France,Spain,True,1-1,Spain,False,0.3123991675944936,0.3917203996464191
-102,Semifinales,2026-07-15,Brazil,Argentina,True,1-1,Argentina,False,0.27932499458664356,0.4376954058356495
-103,Tercer puesto,2026-07-18,France,Brazil,True,1-1,France,False,0.467112514506549,0.24914628946153664
-104,Final,2026-07-19,Spain,Argentina,True,1-1,Spain,False,0.4205822473267968,0.3021982896480776
+91,Octavos de final,2026-07-05,Brazil,Norway,True,1-1,Brazil,False,0.45841203306467093,0.25115174624366776
+92,Octavos de final,2026-07-05,Mexico,England,False,1-1,England,False,0.2822212315170101,0.42441701647649493
+93,Octavos de final,2026-07-06,Portugal,Spain,True,0-1,Spain,False,0.21907340405016454,0.4894597350077721
+94,Octavos de final,2026-07-06,United States,Belgium,False,0-1,Belgium,False,0.19209806448882294,0.5573026715012681
+95,Octavos de final,2026-07-07,Argentina,Egypt,True,2-0,Argentina,False,0.7685865384565036,0.066665487885587
+96,Octavos de final,2026-07-07,Switzerland,Colombia,True,1-1,Colombia,False,0.25295950207451723,0.4710474795037656
+97,Cuartos de final,2026-07-09,France,Morocco,True,1-0,France,False,0.6045934789810835,0.15290013196294722
+98,Cuartos de final,2026-07-10,Spain,Belgium,True,1-0,Spain,False,0.6411903811039914,0.13588713710186365
+99,Cuartos de final,2026-07-11,Brazil,England,True,1-1,Brazil,False,0.4101910993974716,0.3081106175772854
+100,Cuartos de final,2026-07-11,Argentina,Colombia,True,1-0,Argentina,False,0.5659070910721864,0.1739290664598594
+101,Semifinales,2026-07-14,France,Spain,True,1-1,Spain,False,0.3484041678233485,0.35567736681666007
+102,Semifinales,2026-07-15,Brazil,Argentina,True,1-1,Argentina,False,0.27583828040888003,0.43149164093572845
+103,Tercer puesto,2026-07-18,France,Brazil,True,1-1,France,False,0.4496439530178423,0.2582738662353413
+104,Final,2026-07-19,Spain,Argentina,True,1-1,Spain,False,0.4035806061227659,0.30265654104207895

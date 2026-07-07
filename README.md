@@ -117,8 +117,12 @@ reciente (LogLoss 0.975→0.974, accuracy 54.0%→54.3% en las 82 ediciones), aj
 de Mundial sobre las lambdas (marcador exacto 10.1%→12.1% en 5 Mundiales), calibración
 isotónica, y el módulo empírico de prórroga/penaltis (33%/67% si hay empate a 90', logística
 por Elo en prórroga, penaltis 50/50 — `results/params_eliminatorias.json`, derivado con `scripts/derivar_desenlaces_eliminatorias.py` de 296
-cruces reales). Descartadas con evidencia: features de SofaScore, decaimiento exponencial de
-forma, recalibración de marcadores frecuentes, y la regla de umbral para predecir empates.
+cruces reales), y el **valor de mercado histórico de la plantilla** (dataset de Kaggle
+`davidcariboo/player-scores`, verificado sobre 33 ediciones 2010-2026: RMSE 1.1552→1.1419,
+LogLoss 0.9695→0.9576, marcador exacto 14.8%→15.3% — la evidencia agregada más consistente
+de todas las features probadas). Descartadas con evidencia: features de SofaScore, decaimiento
+exponencial de forma, recalibración de marcadores frecuentes, y la regla de umbral para
+predecir empates.
 
 ## Módulo de apuestas (`scripts/simulador_kelly.py`)
 

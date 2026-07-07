@@ -13,11 +13,16 @@ el año que uno espera (la convención de Transfermarkt es la temporada de INICI
 pero para Mundiales de años pares anteriores (2010, 2014, 2018, 2022) el año exacto
 hay que verificarlo mirando el resultado.
 
-IMPORTANTE -- por qué este script está pensado para que lo ejecutes TÚ, no Claude:
-el robots.txt de transfermarkt.com prohíbe explícitamente a ClaudeBot y otros
-crawlers de IA (GPTBot, CCBot...). Ejecutándolo tú mismo en tu terminal, eres tú
-quien hace las peticiones, no un agente de IA -- por eso este script no se lanza
-automáticamente.
+IMPORTANTE -- por qué esto hay que ejecutarlo a mano, no como parte del pipeline
+automático: el robots.txt de transfermarkt.com prohíbe explícitamente crawlers
+automatizados (bots de scraping e IA incluidos). Ejecutándolo tú mismo en tu propia
+terminal, la petición sale de tu sesión de navegación normal, no de un proceso
+desatendido -- por eso este script no se lanza como parte de ningún notebook.
+
+Nota: para histórico ya resuelto, ver en su lugar el dataset de Kaggle
+`davidcariboo/player-scores` (`data/raw/transfermarkt_kaggle/`), que sí trae
+valoraciones fechadas por jugador desde hace años. Este script queda para
+el valor de plantilla ACTUAL, que ese dataset no cubre en tiempo real.
 
 Uso:
     python scripts/scrape_transfermarkt_valor.py                  # Mundial 2026 (saison_id=2025)
