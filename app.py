@@ -1,12 +1,10 @@
-"""Dashboard interactivo del predictor del Mundial 2026.
+"""Dashboard interactivo — Predicciones Machine Learning del Mundial 2026.
 
-Lee SOLO de results/ (los CSV que genera el pipeline) y recalcula todas las métricas en
-vivo -- así, cuando el script diario refresca los resultados, el dashboard se actualiza
-solo sin tocar una línea de código.
+Lee SOLO de results/ y recalcula todas las métricas y clasificaciones en vivo, así que
+cuando el script diario refresca los resultados el dashboard se actualiza solo (recargando).
 
 Ejecutar en local:   streamlit run app.py
 Desplegar gratis:    subir el repo a GitHub y conectarlo en https://share.streamlit.io
-                     (apunta a app.py; no necesita el modelo ni los datos crudos, solo results/).
 """
 from pathlib import Path
 
@@ -19,16 +17,15 @@ DIR_RESULTS = Path(__file__).resolve().parent / "results"
 AZUL, AQUA, AMBAR, VERDE, GRIS = "#2a78d6", "#1baf7a", "#eda100", "#008300", "#898781"
 LAB = np.array(["LOCAL", "EMPATE", "VISITANTE"])
 
-st.set_page_config(page_title="Predictor Mundial 2026", page_icon="⚽", layout="wide")
+st.set_page_config(page_title="Predicciones ML · Mundial 2026", page_icon="🤖", layout="wide")
 
-# --- estilo: tipografía y tarjetas de métrica más limpias ---
 st.markdown("""
 <style>
-  .block-container {padding-top: 2.2rem; max-width: 1150px;}
+  .block-container {padding-top: 2rem; max-width: 1180px;}
   h1, h2, h3 {font-family: system-ui, -apple-system, "Segoe UI", sans-serif;}
-  [data-testid="stMetricValue"] {font-size: 1.9rem; font-weight: 700;}
-  [data-testid="stMetricLabel"] {opacity: 0.75;}
-  .stTabs [data-baseweb="tab"] {font-size: 1.02rem; font-weight: 600;}
+  [data-testid="stMetricValue"] {font-size: 2rem; font-weight: 700; color: #2a78d6;}
+  [data-testid="stMetricLabel"] {opacity: 0.8; font-weight: 600;}
+  .stTabs [data-baseweb="tab"] {font-size: 1.03rem; font-weight: 600;}
   div[data-testid="stDataFrame"] {border-radius: 10px;}
 </style>
 """, unsafe_allow_html=True)
@@ -36,9 +33,6 @@ st.markdown("""
 
 @st.cache_data
 def _leer(ruta_str, _mtime):
-    # _mtime forma parte de la clave de caché: si el archivo cambia, su fecha de
-    # modificación cambia y el caché se invalida solo -> el dashboard refleja los
-    # resultados nuevos con solo recargar la página (sin reiniciar streamlit).
     ruta = Path(ruta_str)
     return pd.read_csv(ruta) if ruta.exists() else pd.DataFrame()
 
@@ -53,8 +47,8 @@ grupos = cargar("predicciones_fase_grupos.csv")
 elim = cargar("predicciones_eliminatoria.csv")
 proximos = cargar("predicciones_proximos_partidos.csv")
 montecarlo = cargar("simulacion_probabilidades_actual.csv")
-mercado = cargar("apuestas_benchmark_mercado.csv")
-verif = cargar("verificacion_70ediciones.csv")
+cuadro = cargar("cuadro_completo.csv")
+mapa_grupos = cargar("grupos_2026.csv")
 
 
 def prev_desde_probs(df):
@@ -65,7 +59,15 @@ def pct(x):
     return f"{x:.1%}" if x is not None and not (isinstance(x, float) and np.isnan(x)) else "—"
 
 
-# ---------- Métricas globales (calculadas en vivo) ----------
+def parse_marcador(s):
+    try:
+        a, b = str(s).split("-")
+        return int(a), int(b)
+    except Exception:
+        return None, None
+
+
+# ---------- Métricas 2026 (en vivo) ----------
 gj = grupos[grupos["resultado_1x2_real"].notna()].copy() if not grupos.empty else pd.DataFrame()
 ok_g = int((gj["resultado_1x2_previsto"] == gj["resultado_1x2_real"]).sum()) if not gj.empty else 0
 me_g = int((gj["marcador_previsto"] == gj["marcador_real"]).sum()) if not gj.empty else 0
@@ -75,44 +77,95 @@ if not ej.empty:
     ej["prev"] = prev_desde_probs(ej)
     ok_e = int((ej["prev"] == ej["resultado_1x2_real"]).sum())
     me_e = int((ej["marcador_previsto"] == ej["marcador_real_90min"]).sum())
-    dec = ej[ej["resultado_1x2_real"] != "EMPATE"]
-    adv_ok = int((dec["avanza_previsto"] == np.where(
-        dec["resultado_1x2_real"] == "LOCAL", dec["equipo_local"], dec["equipo_visitante"])).sum())
-    adv_n = len(dec)
 else:
-    ok_e = me_e = adv_ok = adv_n = 0
+    ok_e = me_e = 0
 
-n_tot = len(gj) + len(ej)
-ok_tot = ok_g + ok_e
-me_tot = me_g + me_e
-acc_2026 = ok_tot / n_tot if n_tot else None
-exacto_2026 = me_tot / n_tot if n_tot else None
+n_1x2 = len(gj) + len(ej)
+acc_1x2 = (ok_g + ok_e) / n_1x2 if n_1x2 else None
+exacto = (me_g + me_e) / n_1x2 if n_1x2 else None
 
-acc_amplio = (verif["acc_adoptado"] * verif["n"]).sum() / verif["n"].sum() if not verif.empty else None
-n_amplio = int(verif["n"].sum()) if not verif.empty else 0
+# Quién avanza a partido completo (incluye prórroga y penaltis): elim vs cuadro real
+avanza_ok = avanza_n = 0
+if not elim.empty and not cuadro.empty:
+    cc = cuadro[cuadro["jugado"] == True]
+    j = elim.merge(cc[["equipo_a", "equipo_b", "ganador"]],
+                   left_on=["equipo_local", "equipo_visitante"],
+                   right_on=["equipo_a", "equipo_b"], how="inner")
+    avanza_ok = int((j["avanza_previsto"] == j["ganador"]).sum())
+    avanza_n = len(j)
 
 # ---------- Cabecera ----------
-st.title("⚽ Predictor del Mundial 2026")
+st.title("🤖 Predicciones Machine Learning · Mundial 2026")
 st.markdown(
-    "Modela los goles de cada equipo (Poisson + Dixon-Coles) y de ahí deriva ganador, marcador "
-    "y quién avanza en cada cruce. **Cada partido se predice a ciegas** — solo con datos "
-    "anteriores a su fecha, sin fuga temporal.")
+    "Un modelo que predice los goles de cada selección (Poisson + Dixon-Coles) y de ahí deriva "
+    "el ganador, el marcador y quién avanza en cada eliminatoria. **Cada partido se predice a "
+    "ciegas**, usando solo datos anteriores a su fecha.")
 
-c1, c2, c3, c4, c5 = st.columns(5)
-c1.metric("Acierto 1X2 · 2026", pct(acc_2026), help=f"{ok_tot}/{n_tot} partidos jugados")
-c2.metric("Marcador exacto · 2026", pct(exacto_2026), help=f"{me_tot}/{n_tot} partidos")
-c3.metric("Quién avanza (90')", pct(adv_ok / adv_n) if adv_n else "—", help=f"{adv_ok}/{adv_n} cruces")
-c4.metric("Validación amplia", pct(acc_amplio), help=f"{n_amplio} partidos, 82 ediciones 1990-2026")
-c5.metric("Casas de apuestas", "~55-58%", help="Referencia del mercado; el azar es 33%")
+c1, c2, c3, c4 = st.columns(4)
+c1.metric("Acierto 1X2 (90 min)", pct(acc_1x2), help=f"{ok_g + ok_e}/{n_1x2} partidos jugados")
+c2.metric("Quién avanza (partido completo)", pct(avanza_ok / avanza_n) if avanza_n else "—",
+          help=f"{avanza_ok}/{avanza_n} eliminatorias, incluye prórroga y penaltis")
+c3.metric("Marcador exacto", pct(exacto), help=f"{me_g + me_e}/{n_1x2} partidos")
+c4.metric("Referencia mercado", "~55-58%", help="Casas de apuestas; el azar puro es 33%")
 
 st.divider()
 
-# ---------- Pestañas ----------
-tab_2026, tab_camp, tab_val = st.tabs(
-    ["📅 Predicciones 2026", "🏆 Camino al título", "🔬 Rigor y validación"])
+tab_clasif, tab_pred, tab_camp = st.tabs(
+    ["📊 Clasificaciones previstas", "📅 Predicción partido a partido", "🏆 Camino al título"])
 
-# ===== TAB 1: PREDICCIONES 2026 =====
-with tab_2026:
+
+# ===== TAB 1: CLASIFICACIONES PREVISTAS =====
+def calcular_clasificacion(df_grupos, mapa):
+    """Tabla de cada grupo a partir de los marcadores PREVISTOS por el modelo."""
+    g2g = dict(zip(mapa["equipo"], mapa["grupo"]))
+    filas = {}
+    for _, r in df_grupos.iterrows():
+        gl, gv = parse_marcador(r["marcador_previsto"])
+        if gl is None:
+            continue
+        for eq, gf, gc in [(r["equipo_local"], gl, gv), (r["equipo_visitante"], gv, gl)]:
+            grp = g2g.get(eq)
+            if grp is None:
+                continue
+            d = filas.setdefault((grp, eq), {"Grupo": grp, "Selección": eq, "PJ": 0,
+                                             "Pts": 0, "GF": 0, "GC": 0})
+            d["PJ"] += 1
+            d["GF"] += gf
+            d["GC"] += gc
+            d["Pts"] += 3 if gf > gc else (1 if gf == gc else 0)
+    tabla = pd.DataFrame(filas.values())
+    if tabla.empty:
+        return tabla
+    tabla["DG"] = tabla["GF"] - tabla["GC"]
+    tabla = tabla.sort_values(["Grupo", "Pts", "DG", "GF"], ascending=[True, False, False, False])
+    tabla["Pos"] = tabla.groupby("Grupo").cumcount() + 1
+    return tabla
+
+
+with tab_clasif:
+    st.subheader("Clasificación prevista de cada grupo")
+    st.caption("Construida con los marcadores que predice el modelo para los 72 partidos de grupos. "
+               "Los **2 primeros** de cada grupo (verde) pasan directos; las mejores terceras plazas "
+               "completan los dieciseisavos.")
+    if not grupos.empty and not mapa_grupos.empty:
+        clasif = calcular_clasificacion(grupos, mapa_grupos)
+        letras = sorted(clasif["Grupo"].unique())
+        # 3 columnas de grupos
+        for i in range(0, len(letras), 3):
+            cols = st.columns(3)
+            for col, letra in zip(cols, letras[i:i + 3]):
+                sub = clasif[clasif["Grupo"] == letra][["Pos", "Selección", "PJ", "Pts", "DG", "GF"]]
+                col.markdown(f"**Grupo {letra}**")
+                sty = sub.style.apply(
+                    lambda row: ["background-color: #e7f4ec" if row["Pos"] <= 2 else "" for _ in row],
+                    axis=1).hide(axis="index").format({"DG": "{:+d}"})
+                col.dataframe(sty, use_container_width=True, hide_index=True)
+    else:
+        st.info("Faltan datos de grupos o el mapa de grupos (results/grupos_2026.csv).")
+
+
+# ===== TAB 2: PREDICCIÓN PARTIDO A PARTIDO =====
+with tab_pred:
     if not proximos.empty:
         st.subheader("🔮 Próximos partidos (aún sin jugar)")
         p = proximos.copy()
@@ -129,14 +182,13 @@ with tab_2026:
 
     st.subheader("📋 Fase de grupos: previsto vs. real")
     if not gj.empty:
-        # filtro rápido: acertados / fallados / todos
         col_f, col_c = st.columns([1, 3])
-        filtro = col_f.radio("Ver", ["Todos", "Solo aciertos", "Solo fallos"], label_visibility="collapsed")
+        filtro = col_f.radio("Ver", ["Todos", "Aciertos", "Fallos"], label_visibility="collapsed")
         j = gj.copy()
         j["acierto"] = j["resultado_1x2_previsto"] == j["resultado_1x2_real"]
-        if filtro == "Solo aciertos":
+        if filtro == "Aciertos":
             j = j[j["acierto"]]
-        elif filtro == "Solo fallos":
+        elif filtro == "Fallos":
             j = j[~j["acierto"]]
         j["1X2"] = np.where(j["acierto"], "✅", "❌")
         j["Marcador"] = np.where(j["marcador_previsto"] == j["marcador_real"], "🎯", "")
@@ -147,88 +199,45 @@ with tab_2026:
                "marcador_real", "1X2", "Marcador"]]
             .rename(columns={"fecha": "Fecha", "equipo_local": "Local", "equipo_visitante": "Visitante",
                              "marcador_previsto": "Marcador prev.", "marcador_real": "Marcador real"}),
-            use_container_width=True, hide_index=True, height=380)
+            use_container_width=True, hide_index=True, height=360)
 
     if not ej.empty:
         st.divider()
-        st.subheader("🥊 Eliminatorias: cada cruce, con su desglose 90'/prórroga/penaltis")
+        st.subheader("🥊 Eliminatorias: cada cruce y su desglose")
         k = ej.copy()
         k["P. clasifica local"] = (k["prob_clasifica_local"] * 100).round(0).astype(int).astype(str) + "%"
         k["Prórroga"] = (k["prob_decide_prorroga"] * 100).round(0).astype(int).astype(str) + "%"
         k["Penaltis"] = (k["prob_decide_penaltis"] * 100).round(0).astype(int).astype(str) + "%"
-        k["✓"] = np.where(k["prev"] == k["resultado_1x2_real"], "✅", "❌")
         st.dataframe(
             k[["equipo_local", "equipo_visitante", "marcador_previsto", "marcador_real_90min",
-               "avanza_previsto", "P. clasifica local", "Prórroga", "Penaltis", "✓"]]
+               "avanza_previsto", "P. clasifica local", "Prórroga", "Penaltis"]]
             .rename(columns={"equipo_local": "Local", "equipo_visitante": "Visitante",
                              "marcador_previsto": "Marc. prev.", "marcador_real_90min": "Marc. real 90'",
-                             "avanza_previsto": "Avanza"}),
+                             "avanza_previsto": "Avanza (pred.)"}),
             use_container_width=True, hide_index=True)
         st.caption("Si el cruce llega empatado a los 90', el modelo reparte la probabilidad entre "
-                   "prórroga (33%) y penaltis (67%) — estos últimos, una moneda al aire.")
+                   "prórroga y penaltis (medido en 296 cruces reales: 33% / 67%).")
 
-# ===== TAB 2: CAMINO AL TÍTULO =====
+
+# ===== TAB 3: CAMINO AL TÍTULO =====
 with tab_camp:
     st.subheader("🏆 Probabilidad de ser campeón (Montecarlo, 3.000 simulaciones)")
     if not montecarlo.empty:
         m = montecarlo.sort_values("campeon", ascending=False).reset_index(drop=True)
-        top = m.head(10).set_index("seleccion")["campeon"]
-        st.bar_chart(top, color=AZUL, height=380, horizontal=True)
-
+        st.bar_chart(m.head(10).set_index("seleccion")["campeon"], color=AZUL, height=380, horizontal=True)
         st.markdown("**Probabilidad de alcanzar cada ronda** (top 12):")
-        tabla = m.head(12).copy()
+        t = m.head(12).copy()
         for col in ["alcanza_octavos", "alcanza_cuartos", "alcanza_semis", "alcanza_final", "campeon"]:
-            tabla[col] = (tabla[col] * 100).round(1).astype(str) + "%"
+            t[col] = (t[col] * 100).round(1).astype(str) + "%"
         st.dataframe(
-            tabla.rename(columns={"seleccion": "Selección", "alcanza_octavos": "Octavos",
-                                  "alcanza_cuartos": "Cuartos", "alcanza_semis": "Semis",
-                                  "alcanza_final": "Final", "campeon": "🏆 Campeón"}),
+            t.rename(columns={"seleccion": "Selección", "alcanza_octavos": "Octavos",
+                              "alcanza_cuartos": "Cuartos", "alcanza_semis": "Semis",
+                              "alcanza_final": "Final", "campeon": "🏆 Campeón"}),
             use_container_width=True, hide_index=True)
-        st.caption("Incorpora todos los resultados ya jugados; solo simula lo que queda por decidir. "
-                   "Se re-simula con el modelo reentrenado hasta el último resultado conocido.")
-
-# ===== TAB 3: RIGOR =====
-with tab_val:
-    st.subheader("¿Por qué fiarse de estos números?")
-    st.markdown(
-        "El mayor error en predicción deportiva es la **fuga temporal**: entrenar con partidos "
-        "que en la práctica son posteriores a los que evalúas, lo que infla la precisión de forma "
-        "artificial (un modelo con *split aleatorio* puede aparentar 70%+ sin que sea real). "
-        "Aquí cada partido se predice **solo con datos anteriores a su fecha**, y cada mejora se "
-        "valida sobre **82 ediciones de torneos mayores (2.677 partidos, 1990-2026)** — no sobre "
-        "un solo torneo, donde el ruido supera a la señal.")
-
-    cola, colb = st.columns(2)
-    with cola:
-        st.metric("Accuracy 1X2 · validación amplia", pct(acc_amplio))
-        if not verif.empty:
-            ll = (verif["logloss_adoptado"] * verif["n"]).sum() / verif["n"].sum()
-            ex = (verif["exacto_adoptado"] * verif["n"]).sum() / verif["n"].sum()
-            st.metric("LogLoss", f"{ll:.3f}")
-            st.metric("Marcador exacto", pct(ex))
-    with colb:
-        st.markdown("**Contexto de las cifras**")
-        st.markdown(
-            "- **Azar puro:** 33%\n"
-            "- **Casas de apuestas:** ~55-58%\n"
-            f"- **Este modelo (2026, a ciegas):** {pct(acc_2026)}\n"
-            f"- **Este modelo (2.677 partidos):** {pct(acc_amplio)}")
-
-    if not mercado.empty:
-        st.divider()
-        st.subheader("El benchmark más duro: contra el mercado de apuestas")
-        mm = mercado.copy()
-        mm["Mundial"] = mm["anio"].astype(str)
-        mm = mm.rename(columns={"n": "Partidos", "logloss_modelo": "LogLoss modelo",
-                                "logloss_mercado": "LogLoss mercado"})
-        st.dataframe(mm[["Mundial", "Partidos", "LogLoss modelo", "LogLoss mercado"]].round(3),
-                     use_container_width=True, hide_index=True)
-        st.caption("Las cuotas de cierre integran alineaciones, lesiones y el dinero de millones "
-                   "de apostantes — son el pronóstico más eficiente que existe, y ganan al modelo "
-                   "en los 4 Mundiales. Se muestra sin adornos: un techo honesto vale más que un "
-                   "récord inflado. Menor LogLoss = mejor.")
+        st.caption("Incorpora todos los resultados ya jugados; solo simula lo que queda por decidir, "
+                   "con el modelo reentrenado hasta el último resultado conocido.")
 
 st.divider()
-st.caption("Metodología completa en los 6 notebooks del repositorio. "
-           "Datos refrescados por `scripts/actualizar_diario.sh`. "
-           "Todas las métricas se recalculan en vivo desde `results/`.")
+st.caption("Metodología completa en los 6 notebooks del repositorio. Todas las métricas y "
+           "clasificaciones se recalculan en vivo desde `results/` — refrescables con "
+           "`scripts/actualizar_diario.sh`.")
