@@ -116,7 +116,9 @@ tab_clasif, tab_pred, tab_camp = st.tabs(
 
 # ===== TAB 1: CLASIFICACIONES PREVISTAS =====
 def calcular_clasificacion(df_grupos, mapa):
-    """Tabla de cada grupo a partir de los marcadores PREVISTOS por el modelo."""
+    """Tabla de cada grupo a partir de los marcadores PREVISTOS por el modelo,
+    con un marcador de clasificación: 🟢 primeros/segundos (pasan directos),
+    🟡 los 8 mejores terceros (también clasifican en el formato de 48)."""
     g2g = dict(zip(mapa["equipo"], mapa["grupo"]))
     filas = {}
     for _, r in df_grupos.iterrows():
@@ -139,27 +141,36 @@ def calcular_clasificacion(df_grupos, mapa):
     tabla["DG"] = tabla["GF"] - tabla["GC"]
     tabla = tabla.sort_values(["Grupo", "Pts", "DG", "GF"], ascending=[True, False, False, False])
     tabla["Pos"] = tabla.groupby("Grupo").cumcount() + 1
+
+    # 8 mejores terceros entre los 12 grupos (mismo criterio: Pts, DG, GF)
+    terceros = tabla[tabla["Pos"] == 3].sort_values(["Pts", "DG", "GF"], ascending=False)
+    mejores_terceros = set(terceros.head(8)["Selección"])
+
+    def marca(row):
+        if row["Pos"] <= 2:
+            return "🟢"
+        if row["Selección"] in mejores_terceros:
+            return "🟡"
+        return ""
+    tabla[""] = tabla.apply(marca, axis=1)
     return tabla
 
 
 with tab_clasif:
     st.subheader("Clasificación prevista de cada grupo")
     st.caption("Construida con los marcadores que predice el modelo para los 72 partidos de grupos. "
-               "Los **2 primeros** de cada grupo (verde) pasan directos; las mejores terceras plazas "
-               "completan los dieciseisavos.")
+               "🟢 = los 2 primeros de cada grupo (pasan directos)  ·  🟡 = uno de los 8 mejores "
+               "terceros (también clasifican, en el formato de 48 selecciones).")
     if not grupos.empty and not mapa_grupos.empty:
         clasif = calcular_clasificacion(grupos, mapa_grupos)
         letras = sorted(clasif["Grupo"].unique())
-        # 3 columnas de grupos
         for i in range(0, len(letras), 3):
             cols = st.columns(3)
             for col, letra in zip(cols, letras[i:i + 3]):
-                sub = clasif[clasif["Grupo"] == letra][["Pos", "Selección", "PJ", "Pts", "DG", "GF"]]
+                sub = clasif[clasif["Grupo"] == letra][["", "Selección", "PJ", "Pts", "DG", "GF"]].copy()
+                sub["DG"] = sub["DG"].map(lambda v: f"{v:+d}")
                 col.markdown(f"**Grupo {letra}**")
-                sty = sub.style.apply(
-                    lambda row: ["background-color: #e7f4ec" if row["Pos"] <= 2 else "" for _ in row],
-                    axis=1).hide(axis="index").format({"DG": "{:+d}"})
-                col.dataframe(sty, use_container_width=True, hide_index=True)
+                col.dataframe(sub, use_container_width=True, hide_index=True)
     else:
         st.info("Faltan datos de grupos o el mapa de grupos (results/grupos_2026.csv).")
 
