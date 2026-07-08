@@ -35,9 +35,18 @@ st.markdown("""
 
 
 @st.cache_data
+def _leer(ruta_str, _mtime):
+    # _mtime forma parte de la clave de caché: si el archivo cambia, su fecha de
+    # modificación cambia y el caché se invalida solo -> el dashboard refleja los
+    # resultados nuevos con solo recargar la página (sin reiniciar streamlit).
+    ruta = Path(ruta_str)
+    return pd.read_csv(ruta) if ruta.exists() else pd.DataFrame()
+
+
 def cargar(nombre):
     ruta = DIR_RESULTS / nombre
-    return pd.read_csv(ruta) if ruta.exists() else pd.DataFrame()
+    mtime = ruta.stat().st_mtime if ruta.exists() else 0
+    return _leer(str(ruta), mtime)
 
 
 grupos = cargar("predicciones_fase_grupos.csv")
